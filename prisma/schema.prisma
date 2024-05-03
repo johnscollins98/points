@@ -9,7 +9,6 @@ model PointEntry {
     id         Int      @id @default(autoincrement())
     points     Int
     wasDouble  Boolean
-    itemNumber Int
     date       DateTime
     createAt   DateTime @default(now())
     updatedAt  DateTime @updatedAt

@@ -16,7 +16,6 @@ export const PointForm = ({ people }: PointFormProps) => {
 
   const [personId, setPersonId] = useState(NaN);
   const [points, setPoints] = useState(NaN);
-  const [itemNumber, setItemNumber] = useState(NaN);
   const [date, setDate] = useState<Date | null>(new Date());
   const [wasDouble, setWasDouble] = useState(false);
 
@@ -30,7 +29,6 @@ export const PointForm = ({ people }: PointFormProps) => {
   const closeHandler = () => {
     setPersonId(NaN);
     setPoints(NaN);
-    setItemNumber(NaN);
     setWasDouble(false);
     setOpen(false);
   }
@@ -39,7 +37,7 @@ export const PointForm = ({ people }: PointFormProps) => {
     e.preventDefault();
     e.stopPropagation();
 
-    createPointEntry({ person: personId, points, itemNumber, wasDouble, date: date ?? undefined });
+    createPointEntry({ person: personId, points, wasDouble, date: date ?? undefined });
 
     closeHandler();
   };
@@ -69,14 +67,6 @@ export const PointForm = ({ people }: PointFormProps) => {
             required
             placeholder="Total number of points..."
             onChange={(value) => setPoints(parseInt(value.toString()))}
-          />
-          <NumberInput
-            label="Item Number"
-            hideControls
-            value={itemNumber}
-            required
-            placeholder="Work item number..."
-            onChange={(value) => setItemNumber(parseInt(value.toString()))}
           />
           <DateInput value={date} onChange={setDate} label="Date" />
           <Checkbox

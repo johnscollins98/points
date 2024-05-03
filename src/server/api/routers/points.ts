@@ -25,14 +25,12 @@ export const pointRouter = createTRPCRouter({
     .input(z.object({
       person: z.number().int(),
       points: z.number().int(),
-      itemNumber: z.number(),
       date: z.date().default(new Date()),
       wasDouble: z.boolean()
     }))
     .mutation(({ ctx, input }) => {
       return ctx.db.pointEntry.create({ data: {
         date: input.date,
-        itemNumber: input.itemNumber,
         points: input.points,
         Person: {
           connect: {

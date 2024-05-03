@@ -15,7 +15,6 @@ export const PointTable = ({ pointEntries }: PointTableProps) => {
         <Table.Th>Name</Table.Th>
         <Table.Th>Points</Table.Th>
         <Table.Th>Double?</Table.Th>
-        <Table.Th>Item</Table.Th>
         <Table.Th>Date</Table.Th>
       </Table.Tr>
     </Table.Thead>
@@ -25,7 +24,6 @@ export const PointTable = ({ pointEntries }: PointTableProps) => {
           <Table.Td>{pointEntry.Person.name}</Table.Td>
           <Table.Td>{pointEntry.points}</Table.Td>
           <Table.Td>{pointEntry.wasDouble ? <FaCheck /> : null}</Table.Td>
-          <Table.Td>{pointEntry.itemNumber}</Table.Td>
           <Table.Td>{pointEntry.date.toLocaleDateString()}</Table.Td>
         </Table.Tr>
       ))}
