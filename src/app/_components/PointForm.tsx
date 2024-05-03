@@ -1,93 +1,85 @@
 "use client";
 
-import { Button, Checkbox, Modal, NumberInput, Select } from "@mantine/core";
+import { Button, Checkbox, NumberInput, Select } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
-import { type Person } from '@prisma/client';
-import { useRouter } from "next/navigation";
+import { type Person } from "@prisma/client";
 import { useState, type FormEvent } from "react";
-import { api } from "~/trpc/react";
 
-export interface PointFormProps {
-  people: Person[];
+export interface PointSubmit {
+  personId: number;
+  points: number;
+  date?: Date;
+  wasDouble: boolean;
 }
 
-export const PointForm = ({ people }: PointFormProps) => {
-  const [open, setOpen] = useState(false);
+export interface PointFormProps {
+  onSubmit: (v: PointSubmit) => void;
+  onReset: () => void;
+  isPending: boolean;
+  people: Person[];
+  defaultPoint?: PointSubmit;
+}
 
-  const [personId, setPersonId] = useState(NaN);
-  const [points, setPoints] = useState(NaN);
-  const [date, setDate] = useState<Date | null>(new Date());
-  const [wasDouble, setWasDouble] = useState(false);
-
-  const router = useRouter();
-  const { mutate: createPointEntry, isPending } = api.point.create.useMutation(
-    {
-      onSuccess: () => router.refresh(),
-    },
+export const PointForm = ({
+  people,
+  onSubmit,
+  onReset,
+  isPending,
+  defaultPoint,
+}: PointFormProps) => {
+  const [personId, setPersonId] = useState(defaultPoint?.personId ?? NaN);
+  const [points, setPoints] = useState(defaultPoint?.points ?? NaN);
+  const [date, setDate] = useState<Date | null>(
+    defaultPoint?.date ?? new Date(),
   );
+  const [wasDouble, setWasDouble] = useState(defaultPoint?.wasDouble ?? false);
 
-  const closeHandler = () => {
-    setPersonId(NaN);
-    setPoints(NaN);
-    setWasDouble(false);
-    setOpen(false);
-  }
-
-  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
-    createPointEntry({ person: personId, points, wasDouble, date: date ?? undefined });
-
-    closeHandler();
+    onSubmit({ personId, points, date: date ?? undefined, wasDouble });
   };
 
   return (
-    <div className='flex justify-start'>
-      <Button onClick={() => setOpen(true)}>Add New Point Entry</Button>
-      <Modal
-        opened={open}
-        onClose={closeHandler}
-        centered
-        title="Create Point Entry"
-      >
-        <form
-          onSubmit={submitHandler}
-          onReset={closeHandler}
-          className="flex flex-col gap-3"
-        >
-          <Select 
-            value={personId.toString()} 
-            onChange={v => v && setPersonId(parseInt(v))}
-            data={people.map((person) => ({ value: person.id.toString(), label: person.name }))} 
-            label="Person"
-            placeholder='Select a person...'
-            searchable
-            required
-          />
-          <NumberInput
-            label="Points"
-            value={points}
-            required
-            placeholder="Total number of points..."
-            onChange={(value) => setPoints(parseInt(value.toString()))}
-          />
-          <DateInput value={date} onChange={setDate} label="Date" />
-          <Checkbox
-            label="Was Double Points?"
-            checked={wasDouble}
-            onChange={(e) => setWasDouble(e.currentTarget.checked)}
-          />
-          <div className="flex justify-end gap-3">
-            <Button type="reset" variant="default" disabled={isPending}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              Submit
-            </Button>
-          </div>
-        </form>
-      </Modal>
-    </div>
+    <form
+      onSubmit={submitHandler}
+      onReset={onReset}
+      className="flex flex-col gap-3"
+    >
+      <Select
+        value={personId.toString()}
+        onChange={(v) => v && setPersonId(parseInt(v))}
+        data={people.map((person) => ({
+          value: person.id.toString(),
+          label: person.name,
+        }))}
+        label="Person"
+        placeholder="Select a person..."
+        searchable
+        required
+      />
+      <NumberInput
+        label="Points"
+        value={points}
+        required
+        placeholder="Total number of points..."
+        onChange={(value) => setPoints(parseInt(value.toString()))}
+      />
+      <DateInput value={date} onChange={setDate} label="Date" />
+      <Checkbox
+        label="Was Double Points?"
+        checked={wasDouble}
+        onChange={(e) => setWasDouble(e.currentTarget.checked)}
+      />
+      <div className="flex justify-end gap-3">
+        <Button type="reset" variant="default" disabled={isPending}>
+          Cancel
+        </Button>
+        <Button type="submit" disabled={isPending}>
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 };

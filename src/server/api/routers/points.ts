@@ -21,9 +21,30 @@ export const pointRouter = createTRPCRouter({
       }, include: { Person: true }, orderBy: { date: 'asc' } });
     }),
 
+    update: publicProcedure
+      .input(z.object({
+        id: z.number().int(),
+        personId: z.number().int(),
+        points: z.number().int(),
+        date: z.date().default(new Date()),
+        wasDouble: z.boolean()
+      }))
+      .mutation(({ ctx, input }) => {
+        return ctx.db.pointEntry.update({ data: {
+          date: input.date,
+          points: input.points,
+          Person: {
+            connect: {
+              id: input.personId
+            }
+          },
+          wasDouble: input.wasDouble
+        }, where: { id: input.id }})
+      }),
+
   create: publicProcedure
     .input(z.object({
-      person: z.number().int(),
+      personId: z.number().int(),
       points: z.number().int(),
       date: z.date().default(new Date()),
       wasDouble: z.boolean()
@@ -34,7 +55,7 @@ export const pointRouter = createTRPCRouter({
         points: input.points,
         Person: {
           connect: {
-            id: input.person
+            id: input.personId
           }
         },
         wasDouble: input.wasDouble
