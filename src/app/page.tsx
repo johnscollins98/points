@@ -4,6 +4,7 @@ import { UserForm } from "./_components/UserForm";
 import { UserTable } from "./_components/UserTable";
 import { DateFilerForm } from './_components/DateFilterForm';
 import { getDateFilterObject } from './_utils/getDateFilterObject';
+import { PointTable } from './_components/PointTable';
 
 export default async function Home({ searchParams }: { searchParams: Record<string, string | string[] | undefined>}) {
   const { startDate, endDate } = searchParams;
@@ -14,15 +15,8 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
 
   return (
     <main className="flex flex-col-reverse justify-between gap-4 p-4 md:flex-row">
-      <div>
-        <h2>Points</h2>
-        {points.map((pointEntry) => (
-          <div key={pointEntry.id} className="flex gap-1">
-            <b>{pointEntry.Person.name}</b>
-            <div>{pointEntry.points}</div>
-            <div>{pointEntry.date.toLocaleDateString()}</div>
-          </div>
-        ))}
+      <div className='flex flex-col flex-grow gap-3'>
+        <PointTable pointEntries={points} />
         <PointForm people={people} />
       </div>
       <div className='flex flex-col gap-6'>

@@ -45,7 +45,7 @@ export const PointForm = ({ people }: PointFormProps) => {
   };
 
   return (
-    <>
+    <div className='flex justify-start'>
       <Button onClick={() => setOpen(true)}>Create new</Button>
       <Modal
         opened={open}
@@ -94,6 +94,6 @@ export const PointForm = ({ people }: PointFormProps) => {
           </div>
         </form>
       </Modal>
-    </>
+    </div>
   );
 };
