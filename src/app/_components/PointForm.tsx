@@ -13,9 +13,9 @@ export interface PointFormProps {
 export const PointForm = ({ people }: PointFormProps) => {
   const [open, setOpen] = useState(false);
 
-  const [personId, setPersonId] = useState(0);
-  const [points, setPoints] = useState(0);
-  const [itemNumber, setItemNumber] = useState(0);
+  const [personId, setPersonId] = useState(NaN);
+  const [points, setPoints] = useState(NaN);
+  const [itemNumber, setItemNumber] = useState(NaN);
   const [wasDouble, setWasDouble] = useState(false);
 
   const router = useRouter();
@@ -25,13 +25,21 @@ export const PointForm = ({ people }: PointFormProps) => {
     },
   );
 
+  const closeHandler = () => {
+    setPersonId(NaN);
+    setPoints(NaN);
+    setItemNumber(NaN);
+    setWasDouble(false);
+    setOpen(false);
+  }
+
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
     createPointEntry({ person: personId, points, itemNumber, wasDouble });
 
-    setOpen(false);
+    closeHandler();
   };
 
   return (
@@ -39,13 +47,13 @@ export const PointForm = ({ people }: PointFormProps) => {
       <Button onClick={() => setOpen(true)}>Create new</Button>
       <Modal
         opened={open}
-        onClose={() => setOpen(false)}
+        onClose={closeHandler}
         centered
         title="Create Point Entry"
       >
         <form
           onSubmit={submitHandler}
-          onReset={() => setOpen(false)}
+          onReset={closeHandler}
           className="flex flex-col gap-3"
         >
           <Select 
@@ -60,12 +68,13 @@ export const PointForm = ({ people }: PointFormProps) => {
             placeholder="Total number of points..."
             onChange={(value) => setPoints(parseInt(value.toString()))}
           />
-          <TextInput
+          <NumberInput
             label="Item Number"
+            hideControls
             value={itemNumber}
             required
             placeholder="Work item number..."
-            onChange={(e) => setItemNumber(parseInt(e.target.value))}
+            onChange={(value) => setItemNumber(parseInt(value.toString()))}
           />
           <Checkbox
             label="Was Double Points?"
