@@ -7,8 +7,8 @@ export default async function Home() {
   const people = await api.person.getAll();
 
   return (
-    <main className='flex'>
-      <div className="flex-grow">
+    <main className='flex justify-between flex-col md:flex-row gap-4 p-4'>
+      <div>
         <h2>Points</h2>
         {points.map((pointEntry) => (
           <div key={pointEntry.id} className='flex gap-1'>
@@ -18,7 +18,7 @@ export default async function Home() {
         ))}
         <PointForm people={people} />
       </div>
-      <div className='w-1/4'>
+      <div>
         <h2>Users</h2>
         <ul>
           {people.map((user) => <li key={user.id}>{user.name}</li>)}
