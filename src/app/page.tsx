@@ -1,10 +1,11 @@
 import { api } from "~/trpc/server";
 import { PointForm } from './_components/PointForm';
 import { UserForm } from './_components/UserForm';
+import { UserTable } from './_components/UserTable';
 
 export default async function Home() {
   const points = await api.point.getAll();
-  const people = await api.person.getAll();
+  const people = await api.person.getAllWithPointTotal();
 
   return (
     <main className='flex justify-between flex-col md:flex-row gap-4 p-4'>
@@ -18,11 +19,8 @@ export default async function Home() {
         ))}
         <PointForm people={people} />
       </div>
-      <div>
-        <h2>Users</h2>
-        <ul>
-          {people.map((user) => <li key={user.id}>{user.name}</li>)}
-        </ul>
+      <div className='flex flex-col gap-3'>
+        <UserTable people={people} />
         <UserForm />
       </div>
     </main>

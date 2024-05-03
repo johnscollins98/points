@@ -8,9 +8,23 @@ export const personRouter = createTRPCRouter({
       return ctx.db.person.findMany();
     }),
 
+  getAllWithPointTotal: publicProcedure
+    .query(async ({ ctx }) => {
+      const people = await ctx.db.person.findMany({ include: { PointEntry: { select: { points: true } } }}) ;
+      return people.map((person) => {
+        const pointTotal = person.PointEntry.reduce((sum, entry) => sum + entry.points, 0);
+        const totalEntries = person.PointEntry.length;
+        const pointAverage = totalEntries === 0 ? 0 : pointTotal / totalEntries;
+
+        return { ...person, pointTotal, totalEntries, pointAverage }
+      })
+    }),
+
   create: publicProcedure
     .input(z.string().min(1))
     .mutation(({ ctx, input }) => {
       return ctx.db.person.create({ data: { name: input }})
     })
 });
+
+export type PersonWithPointTotals = Awaited<ReturnType<typeof personRouter.getAllWithPointTotal>>[number];
