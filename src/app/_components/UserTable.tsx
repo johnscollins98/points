@@ -1,6 +1,7 @@
 "use client";
 
 import { Table } from "@mantine/core";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { RxCaretDown, RxCaretUp } from "react-icons/rx";
 import { type PersonWithPointTotals } from "~/server/api/routers/person";
@@ -17,6 +18,11 @@ const headers: { label: string; id: keyof PersonWithPointTotals }[] = [
 ];
 
 export const UserTable = ({ people }: UserTableProps) => {
+  const router = useRouter();
+  const params = useSearchParams();
+  const pathname = usePathname();
+  const filterByName = params.get("name");
+
   const [sortBy, setSortBy] =
     useState<keyof PersonWithPointTotals>("pointTotal");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
@@ -51,6 +57,19 @@ export const UserTable = ({ people }: UserTableProps) => {
     }
   };
 
+  const nameClickHandler = (name: string) => {
+    const newParams = new URLSearchParams(params);
+    
+    if (filterByName === name) {
+      newParams.delete("name");
+    } else {
+      newParams.set("name", name);
+    }
+
+    const query = newParams.toString();
+    router.push(`${pathname}?${query}`);
+  };
+
   return (
     <Table>
       <Table.Thead>
@@ -76,7 +95,12 @@ export const UserTable = ({ people }: UserTableProps) => {
       <Table.Tbody>
         {sortedPeople.map((person) => (
           <Table.Tr key={person.id}>
-            <Table.Td>{person.name}</Table.Td>
+            <Table.Td
+              onClick={() => nameClickHandler(person.name)}
+              className={`cursor-pointer select-none ${filterByName === person.name ? "font-bold" : ""}`}
+            >
+              {person.name}
+            </Table.Td>
             <Table.Td>{person.pointTotal}</Table.Td>
             <Table.Td>{person.totalEntries}</Table.Td>
             <Table.Td>{person.pointAverage}</Table.Td>

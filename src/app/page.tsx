@@ -7,10 +7,10 @@ import { getDateFilterObject } from './_utils/getDateFilterObject';
 import { PointTable } from './_components/PointTable';
 
 export default async function Home({ searchParams }: { searchParams: Record<string, string | string[] | undefined>}) {
-  const { startDate, endDate } = searchParams;
+  const { startDate, endDate, name } = searchParams;
   const filterDates = getDateFilterObject(startDate, endDate);
 
-  const points = await api.point.getAll(filterDates);
+  const points = await api.point.getAll({ ...filterDates, filterPerson: typeof name === 'string' ? name : undefined });
   const people = await api.person.getAllWithPointTotal(filterDates);
 
   return (

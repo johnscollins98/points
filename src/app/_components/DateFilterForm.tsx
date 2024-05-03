@@ -25,27 +25,33 @@ export const DateFilerForm = () => {
   const resetHandler = () => {
     setStartDate(null);
     setEndDate(null);
-    router.push(pathname);
+    updateFilterQuery(null, null);
   };
 
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    updateFilterQuery(startDate, endDate);
+  };
 
-    const params: Record<string, string> = {};
+  const updateFilterQuery = (startDate: Date | null, endDate: Date | null) => {
+    const newParams = new URLSearchParams(params);
     if (startDate) {
-      params.startDate = startDate.toISOString();
+      newParams.set("startDate", startDate.toISOString());
+    } else {
+      newParams.delete("startDate");
     }
 
     if (endDate) {
-      params.endDate = endDate.toISOString();
+      newParams.set("endDate", endDate.toISOString());
+    } else {
+      newParams.delete("endDate");
     }
 
-    const searchParams = new URLSearchParams(params);
-    const query = searchParams.toString();
+    const query = newParams.toString();
 
     router.push(`${pathname}?${query}`);
-  };
+  }
 
   return (
     <form
