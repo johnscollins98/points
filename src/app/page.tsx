@@ -15,6 +15,7 @@ export default async function Home() {
           <div key={pointEntry.id} className='flex gap-1'>
             <b>{pointEntry.Person.name}</b>
             <div>{pointEntry.points}</div>
+            <div>{pointEntry.date.toLocaleDateString()}</div>
           </div>
         ))}
         <PointForm people={people} />

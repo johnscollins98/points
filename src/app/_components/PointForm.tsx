@@ -1,6 +1,7 @@
 "use client";
 
-import { Button, Checkbox, Modal, NumberInput, Select, TextInput } from "@mantine/core";
+import { Button, Checkbox, Modal, NumberInput, Select } from "@mantine/core";
+import { DateInput } from "@mantine/dates";
 import { type Person } from '@prisma/client';
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
@@ -16,6 +17,7 @@ export const PointForm = ({ people }: PointFormProps) => {
   const [personId, setPersonId] = useState(NaN);
   const [points, setPoints] = useState(NaN);
   const [itemNumber, setItemNumber] = useState(NaN);
+  const [date, setDate] = useState<Date | null>(new Date());
   const [wasDouble, setWasDouble] = useState(false);
 
   const router = useRouter();
@@ -37,7 +39,7 @@ export const PointForm = ({ people }: PointFormProps) => {
     e.preventDefault();
     e.stopPropagation();
 
-    createPointEntry({ person: personId, points, itemNumber, wasDouble });
+    createPointEntry({ person: personId, points, itemNumber, wasDouble, date: date ?? undefined });
 
     closeHandler();
   };
@@ -76,6 +78,7 @@ export const PointForm = ({ people }: PointFormProps) => {
             placeholder="Work item number..."
             onChange={(value) => setItemNumber(parseInt(value.toString()))}
           />
+          <DateInput value={date} onChange={setDate} label="Date" />
           <Checkbox
             label="Was Double Points?"
             checked={wasDouble}
