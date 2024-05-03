@@ -44,7 +44,7 @@ export const PointForm = ({ people }: PointFormProps) => {
 
   return (
     <div className='flex justify-start'>
-      <Button onClick={() => setOpen(true)}>Create new</Button>
+      <Button onClick={() => setOpen(true)}>Add New Point Entry</Button>
       <Modal
         opened={open}
         onClose={closeHandler}

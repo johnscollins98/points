@@ -14,16 +14,16 @@ export default async function Home({ searchParams }: { searchParams: Record<stri
   const people = await api.person.getAllWithPointTotal(filterDates);
 
   return (
-    <main className="flex flex-col-reverse justify-between gap-4 p-4 md:flex-row">
-      <div className='flex flex-col flex-grow gap-3'>
+    <main className="flex flex-col-reverse justify-between gap-4 p-4 overflow-auto md:flex-row md:overflow-hidden md:max-h-svh">
+      <div className='flex flex-col flex-grow gap-3 md:max-h-full md:overflow-auto'>
         <PointTable pointEntries={points} />
-        <PointForm people={people} />
       </div>
-      <div className='flex flex-col gap-6'>
+      <div className='flex flex-col gap-6 md:overflow-auto md:pr-2'>
         <DateFilerForm />
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-4">
           <UserTable people={people} />
           <UserForm />
+          <PointForm people={people} />
         </div>
       </div>
     </main>
