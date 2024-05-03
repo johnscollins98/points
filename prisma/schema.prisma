@@ -9,9 +9,20 @@ model PointEntry {
     id         Int      @id @default(autoincrement())
     points     Int
     wasDouble  Boolean
-    person     String
     itemNumber Int
     date       DateTime
+    createAt   DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    Person     Person   @relation(fields: [personId], references: [id])
+    personId   Int
+}
+
+model Person {
+    id         Int          @id @default(autoincrement())
+    name       String
+    createdAt  DateTime     @default(now())
+    updatedAt  DateTime     @updatedAt
+    PointEntry PointEntry[]
 }
 
 datasource db {

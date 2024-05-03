@@ -11,13 +11,15 @@ export const pointRouter = createTRPCRouter({
     .query(({ ctx, input }) => {
       return ctx.db.pointEntry.findMany({ where: {
         date: input?.filterDate,
-        person: input?.filterPerson
-      }});
+        Person: {
+          name: input?.filterPerson
+        }
+      }, include: { Person: true }});
     }),
 
   create: publicProcedure
     .input(z.object({
-      person: z.string().min(1),
+      person: z.number().int(),
       points: z.number().int(),
       itemNumber: z.number(),
       date: z.date().default(new Date()),
@@ -28,7 +30,11 @@ export const pointRouter = createTRPCRouter({
         date: input.date,
         itemNumber: input.itemNumber,
         points: input.points,
-        person: input.person,
+        Person: {
+          connect: {
+            id: input.person
+          }
+        },
         wasDouble: input.wasDouble
       }})
     })

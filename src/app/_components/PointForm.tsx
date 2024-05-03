@@ -1,20 +1,25 @@
 "use client";
 
-import { Button, Checkbox, Modal, NumberInput, TextInput } from "@mantine/core";
+import { Button, Checkbox, Modal, NumberInput, Select, TextInput } from "@mantine/core";
+import { type Person } from '@prisma/client';
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { api } from "~/trpc/react";
 
-export const PointForm = () => {
+export interface PointFormProps {
+  people: Person[];
+}
+
+export const PointForm = ({ people }: PointFormProps) => {
   const [open, setOpen] = useState(false);
 
-  const [name, setName] = useState("");
+  const [personId, setPersonId] = useState(0);
   const [points, setPoints] = useState(0);
   const [itemNumber, setItemNumber] = useState(0);
   const [wasDouble, setWasDouble] = useState(false);
 
   const router = useRouter();
-  const { mutate: createPointEntry, isPending } = api.points.create.useMutation(
+  const { mutate: createPointEntry, isPending } = api.point.create.useMutation(
     {
       onSuccess: () => router.refresh(),
     },
@@ -24,7 +29,9 @@ export const PointForm = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    createPointEntry({ person: name, points, itemNumber, wasDouble });
+    createPointEntry({ person: personId, points, itemNumber, wasDouble });
+
+    setOpen(false);
   };
 
   return (
@@ -41,12 +48,10 @@ export const PointForm = () => {
           onReset={() => setOpen(false)}
           className="flex flex-col gap-3"
         >
-          <TextInput
-            label="Name"
-            value={name}
-            placeholder="Enter the person's name..."
-            required
-            onChange={(e) => setName(e.target.value)}
+          <Select 
+            value={personId.toString()} 
+            onChange={v => v && setPersonId(parseInt(v))}
+            data={people.map((person) => ({ value: person.id.toString(), label: person.name }))} 
           />
           <NumberInput
             label="Points"
