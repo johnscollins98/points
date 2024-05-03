@@ -60,6 +60,10 @@ export const PointForm = ({ people }: PointFormProps) => {
             value={personId.toString()} 
             onChange={v => v && setPersonId(parseInt(v))}
             data={people.map((person) => ({ value: person.id.toString(), label: person.name }))} 
+            label="Person"
+            placeholder='Select a person...'
+            searchable
+            required
           />
           <NumberInput
             label="Points"
