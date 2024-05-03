@@ -1,47 +1,82 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
-import { type FormEvent, useState } from 'react';
-import { api } from '~/trpc/react';
+import { Button, Checkbox, Modal, NumberInput, TextInput } from "@mantine/core";
+import { useRouter } from "next/navigation";
+import { useState, type FormEvent } from "react";
+import { api } from "~/trpc/react";
 
 export const PointForm = () => {
+  const [open, setOpen] = useState(false);
+
   const [name, setName] = useState("");
   const [points, setPoints] = useState(0);
   const [itemNumber, setItemNumber] = useState(0);
   const [wasDouble, setWasDouble] = useState(false);
 
   const router = useRouter();
-  const { mutate: createPointEntry, isPending } = api.points.create.useMutation({
-    onSuccess: () => router.refresh()
-  });
+  const { mutate: createPointEntry, isPending } = api.points.create.useMutation(
+    {
+      onSuccess: () => router.refresh(),
+    },
+  );
 
   const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
     createPointEntry({ person: name, points, itemNumber, wasDouble });
-  }
+  };
 
   return (
-    <form onSubmit={submitHandler}>
-      <h2>Create Point Entry</h2>
-      <label>
-        Name: 
-        <input className='border-gray-300 border rounded-md' type="text" value={name} onChange={e => setName(e.target.value)} />
-      </label>
-      <label>
-        Points:
-        <input className='border-gray-300 border rounded-md' type="number" value={points} onChange={e => setPoints(parseInt(e.target.value))} />
-      </label>
-      <label>
-        Item:
-        <input className='border-gray-300 border rounded-md' type="number" value={itemNumber} onChange={e => setItemNumber(parseInt(e.target.value))} />
-      </label>
-      <label>
-        <input type="checkbox" checked={wasDouble} onClick={() => setWasDouble(!wasDouble)} />
-        Was Double Points?
-      </label>
-      <button type="submit" disabled={isPending}>Submit</button>
-    </form>
-  )
-}
+    <>
+      <Button onClick={() => setOpen(true)}>Create new</Button>
+      <Modal
+        opened={open}
+        onClose={() => setOpen(false)}
+        centered
+        title="Create Point Entry"
+      >
+        <form
+          onSubmit={submitHandler}
+          onReset={() => setOpen(false)}
+          className="flex flex-col gap-3"
+        >
+          <TextInput
+            label="Name"
+            value={name}
+            placeholder="Enter the person's name..."
+            required
+            onChange={(e) => setName(e.target.value)}
+          />
+          <NumberInput
+            label="Points"
+            value={points}
+            required
+            placeholder="Total number of points..."
+            onChange={(value) => setPoints(parseInt(value.toString()))}
+          />
+          <TextInput
+            label="Item Number"
+            value={itemNumber}
+            required
+            placeholder="Work item number..."
+            onChange={(e) => setItemNumber(parseInt(e.target.value))}
+          />
+          <Checkbox
+            label="Was Double Points?"
+            checked={wasDouble}
+            onChange={(e) => setWasDouble(e.currentTarget.checked)}
+          />
+          <div className="flex justify-end gap-3">
+            <Button type="reset" variant="default" disabled={isPending}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isPending}>
+              Submit
+            </Button>
+          </div>
+        </form>
+      </Modal>
+    </>
+  );
+};
