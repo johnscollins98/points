@@ -39,5 +39,11 @@ export const pointRouter = createTRPCRouter({
         },
         wasDouble: input.wasDouble
       }})
+    }),
+
+  deleteById: publicProcedure
+    .input(z.number().int())
+    .mutation(({ ctx, input }) => {
+      return ctx.db.pointEntry.delete({ where: { id: input }})
     })
 });
