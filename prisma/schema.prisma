@@ -5,6 +5,15 @@ generator client {
     provider = "prisma-client-js"
 }
 
+model PointEntry {
+    id         Int      @id @default(autoincrement())
+    points     Int
+    wasDouble  Boolean
+    person     String
+    itemNumber Int
+    date       DateTime
+}
+
 datasource db {
     provider = "sqlite"
     url      = env("DATABASE_URL")
