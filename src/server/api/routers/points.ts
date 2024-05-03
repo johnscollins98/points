@@ -5,12 +5,16 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 export const pointRouter = createTRPCRouter({
   getAll: publicProcedure
     .input(z.object({ 
-      filterDate: z.date().optional(), 
+      startDate: z.date().optional(), 
+      endDate: z.date().optional(),
       filterPerson: z.string().min(1).optional()
     }).optional())
     .query(({ ctx, input }) => {
       return ctx.db.pointEntry.findMany({ where: {
-        date: input?.filterDate,
+        date: {
+          gte: input?.startDate,
+          lte: input?.endDate
+        },
         Person: {
           name: input?.filterPerson
         }

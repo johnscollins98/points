@@ -3,28 +3,50 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const personRouter = createTRPCRouter({
-  getAll: publicProcedure
-    .query(({ ctx }) => {
-      return ctx.db.person.findMany();
-    }),
+  getAll: publicProcedure.query(({ ctx }) => {
+    return ctx.db.person.findMany();
+  }),
 
   getAllWithPointTotal: publicProcedure
-    .query(async ({ ctx }) => {
-      const people = await ctx.db.person.findMany({ include: { PointEntry: { select: { points: true } } }}) ;
+    .input(
+      z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const people = await ctx.db.person.findMany({
+        include: {
+          PointEntry: {
+            where: {
+              date: {
+                gte: input.startDate,
+                lte: input.endDate,
+              },
+            },
+            select: { points: true },
+          },
+        },
+      });
       return people.map((person) => {
-        const pointTotal = person.PointEntry.reduce((sum, entry) => sum + entry.points, 0);
+        const pointTotal = person.PointEntry.reduce(
+          (sum, entry) => sum + entry.points,
+          0,
+        );
         const totalEntries = person.PointEntry.length;
         const pointAverage = totalEntries === 0 ? 0 : pointTotal / totalEntries;
 
-        return { ...person, pointTotal, totalEntries, pointAverage }
-      })
+        return { ...person, pointTotal, totalEntries, pointAverage };
+      });
     }),
 
   create: publicProcedure
     .input(z.string().min(1))
     .mutation(({ ctx, input }) => {
-      return ctx.db.person.create({ data: { name: input }})
-    })
+      return ctx.db.person.create({ data: { name: input } });
+    }),
 });
 
-export type PersonWithPointTotals = Awaited<ReturnType<typeof personRouter.getAllWithPointTotal>>[number];
+export type PersonWithPointTotals = Awaited<
+  ReturnType<typeof personRouter.getAllWithPointTotal>
+>[number];
