@@ -18,7 +18,7 @@ export const pointRouter = createTRPCRouter({
         Person: {
           name: input?.filterPerson
         }
-      }, include: { Person: true }, orderBy: { date: 'asc' } });
+      }, include: { Person: true }, orderBy: { date: 'desc' } });
     }),
 
     update: publicProcedure
