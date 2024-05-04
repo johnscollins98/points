@@ -1,11 +1,11 @@
-import "~/styles/globals.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
 
-import { TRPCReactProvider } from "~/trpc/react";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { TRPCReactProvider } from "~/trpc/react";
 
 const inter = Inter({
   subsets: ["latin"],

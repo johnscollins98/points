@@ -2,7 +2,7 @@
 
 import { Button, TextInput } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { type FormEvent, useState } from "react";
+import { useState, type FormEvent } from "react";
 import { api } from "~/trpc/react";
 
 export const UserForm = () => {

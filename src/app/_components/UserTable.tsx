@@ -1,7 +1,7 @@
 "use client";
 
 import { Table } from "@mantine/core";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { RxCaretDown, RxCaretUp } from "react-icons/rx";
 import { type PersonWithPointTotals } from "~/server/api/routers/person";
