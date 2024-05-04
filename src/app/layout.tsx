@@ -1,11 +1,11 @@
 import "~/styles/globals.css";
-import '@mantine/core/styles.css';
-import '@mantine/dates/styles.css';
+import "@mantine/core/styles.css";
+import "@mantine/dates/styles.css";
 
 import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,10 +26,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <ColorSchemeScript defaultColorScheme='auto' />
+        <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body className={`${inter.variable} root`}>
-        <MantineProvider defaultColorScheme='auto'>
+        <MantineProvider defaultColorScheme="auto">
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </MantineProvider>
       </body>

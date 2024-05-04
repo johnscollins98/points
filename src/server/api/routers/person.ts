@@ -9,10 +9,12 @@ export const personRouter = createTRPCRouter({
 
   getAllWithPointTotal: publicProcedure
     .input(
-      z.object({
-        startDate: z.date().optional(),
-        endDate: z.date().optional(),
-      }).optional(),
+      z
+        .object({
+          startDate: z.date().optional(),
+          endDate: z.date().optional(),
+        })
+        .optional(),
     )
     .query(async ({ ctx, input }) => {
       const people = await ctx.db.person.findMany({

@@ -51,7 +51,7 @@ export const DateFilerForm = () => {
     const query = newParams.toString();
 
     router.push(`${pathname}?${query}`);
-  }
+  };
 
   return (
     <form

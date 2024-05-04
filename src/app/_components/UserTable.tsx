@@ -59,7 +59,7 @@ export const UserTable = ({ people }: UserTableProps) => {
 
   const nameClickHandler = (name: string) => {
     const newParams = new URLSearchParams(params);
-    
+
     if (filterByName === name) {
       newParams.delete("name");
     } else {
@@ -103,7 +103,11 @@ export const UserTable = ({ people }: UserTableProps) => {
             </Table.Td>
             <Table.Td>{person.pointTotal}</Table.Td>
             <Table.Td>{person.totalEntries}</Table.Td>
-            <Table.Td>{person.pointAverage.toLocaleString(undefined, { maximumSignificantDigits: 3 })}</Table.Td>
+            <Table.Td>
+              {person.pointAverage.toLocaleString(undefined, {
+                maximumSignificantDigits: 3,
+              })}
+            </Table.Td>
           </Table.Tr>
         ))}
       </Table.Tbody>
