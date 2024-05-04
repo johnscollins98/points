@@ -1,35 +1,29 @@
 "use client";
 
 import { ActionIcon, CloseIcon, Table } from "@mantine/core";
-import { type Person } from '@prisma/client';
-import { useRouter } from "next/navigation";
-import { useState } from 'react';
+import { type Person } from "@prisma/client";
+import { useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { RxPencil1 } from "react-icons/rx";
-import { api } from "~/trpc/react";
-import { type api as ServerAPI } from "~/trpc/server";
-import { EditPoint } from './EditPoint';
+import { type PointEntryWithPerson } from "~/server/api/routers/points";
+import { DeletePoint } from "./DeletePoint";
+import { EditPoint } from "./EditPoint";
 
 export interface PointTableProps {
-  pointEntries: Awaited<ReturnType<typeof ServerAPI.point.getAll>>;
+  pointEntries: PointEntryWithPerson[];
   people: Person[];
 }
 
 export const PointTable = ({ pointEntries, people }: PointTableProps) => {
-  const router = useRouter();
-
-  const { mutate: deleteEntry } = api.point.deleteById.useMutation({
-    onSuccess: () => router.refresh(),
-  });
-
-  const onDelete = (id: number) => {
-    deleteEntry(id);
+  const [toDelete, setToDelete] = useState<PointEntryWithPerson | null>(null);
+  const onDelete = (point: PointEntryWithPerson) => {
+    setToDelete(point);
   };
 
-  const [toEdit, setToEdit] = useState<PointTableProps["pointEntries"][number] | null>(null);
-  const onEdit = (toEdit: PointTableProps["pointEntries"][number]) => {
+  const [toEdit, setToEdit] = useState<PointEntryWithPerson | null>(null);
+  const onEdit = (toEdit: PointEntryWithPerson) => {
     setToEdit(toEdit);
-  }
+  };
 
   return (
     <>
@@ -55,7 +49,7 @@ export const PointTable = ({ pointEntries, people }: PointTableProps) => {
                   <ActionIcon onClick={() => onEdit(pointEntry)}>
                     <RxPencil1 />
                   </ActionIcon>
-                  <ActionIcon onClick={() => onDelete(pointEntry.id)}>
+                  <ActionIcon onClick={() => onDelete(pointEntry)}>
                     <CloseIcon />
                   </ActionIcon>
                 </div>
@@ -64,7 +58,15 @@ export const PointTable = ({ pointEntries, people }: PointTableProps) => {
           ))}
         </Table.Tbody>
       </Table>
-      <EditPoint clearDefaultPoint={() => setToEdit(null)} defaultPoint={toEdit} people={people} />
+      <DeletePoint
+        pointToDelete={toDelete}
+        onCancel={() => setToDelete(null)}
+      />
+      <EditPoint
+        clearDefaultPoint={() => setToEdit(null)}
+        defaultPoint={toEdit}
+        people={people}
+      />
     </>
   );
 };
