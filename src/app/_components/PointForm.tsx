@@ -57,6 +57,7 @@ export const PointForm = ({
         label="Person"
         placeholder="Select a person..."
         searchable
+        autoFocus
         required
       />
       <NumberInput

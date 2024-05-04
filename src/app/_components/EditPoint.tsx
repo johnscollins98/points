@@ -36,6 +36,7 @@ export const EditPoint = ({ people, defaultPoint, clearDefaultPoint }: EditPoint
       opened={defaultPoint !== null}
       onClose={closeHandler}
       centered
+      trapFocus={false}
       title="Edit Point Entry"
     >
       {defaultPoint && <PointForm onSubmit={submitHandler} onReset={closeHandler} isPending={isPending} people={people} defaultPoint={defaultPoint} />}

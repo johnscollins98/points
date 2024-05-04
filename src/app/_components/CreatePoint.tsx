@@ -31,15 +31,21 @@ export const CreatePoint = ({ people }: CreatePointProps) => {
   };
 
   return (
-    <div className='flex justify-start'>
+    <div className="flex justify-start">
       <Button onClick={() => setOpen(true)}>Add New Point Entry</Button>
       <Modal
         opened={open}
         onClose={closeHandler}
         centered
+        trapFocus={false}
         title="Create Point Entry"
       >
-        <PointForm onSubmit={submitHandler} onReset={closeHandler} isPending={isPending} people={people} />
+        <PointForm
+          onSubmit={submitHandler}
+          onReset={closeHandler}
+          isPending={isPending}
+          people={people}
+        />
       </Modal>
     </div>
   );
