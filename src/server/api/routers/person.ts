@@ -12,7 +12,7 @@ export const personRouter = createTRPCRouter({
       z.object({
         startDate: z.date().optional(),
         endDate: z.date().optional(),
-      }),
+      }).optional(),
     )
     .query(async ({ ctx, input }) => {
       const people = await ctx.db.person.findMany({
@@ -20,8 +20,8 @@ export const personRouter = createTRPCRouter({
           PointEntry: {
             where: {
               date: {
-                gte: input.startDate,
-                lte: input.endDate,
+                gte: input?.startDate,
+                lte: input?.endDate,
               },
             },
             select: { points: true },
