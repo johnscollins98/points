@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { api } from "~/trpc/react";
 
-export const UserForm = () => {
+export const PersonForm = () => {
   const router = useRouter();
 
-  const { mutate: createUser, isPending } = api.person.create.useMutation({
+  const { mutate: createPerson, isPending } = api.person.create.useMutation({
     onSuccess: () => router.refresh(),
   });
 
@@ -18,7 +18,7 @@ export const UserForm = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    createUser(name);
+    createPerson(name);
     setName("");
   };
 
@@ -31,7 +31,7 @@ export const UserForm = () => {
         placeholder="Enter name..."
       />
       <Button disabled={isPending} type="submit">
-        Add User
+        Add Person
       </Button>
     </form>
   );

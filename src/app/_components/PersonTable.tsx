@@ -8,7 +8,7 @@ import { RxCaretDown, RxCaretUp } from "react-icons/rx";
 import { type PersonWithPointTotals } from "~/server/api/routers/person";
 import { api } from "~/trpc/react";
 
-export interface UserTableProps {
+export interface PersonTableProps {
   people: PersonWithPointTotals[];
 }
 
@@ -19,7 +19,7 @@ const headers: { label: string; id: keyof PersonWithPointTotals }[] = [
   { label: "Average", id: "pointAverage" },
 ];
 
-export const UserTable = ({ people }: UserTableProps) => {
+export const PersonTable = ({ people }: PersonTableProps) => {
   const router = useRouter();
   const params = useSearchParams();
   const pathname = usePathname();
@@ -76,19 +76,19 @@ export const UserTable = ({ people }: UserTableProps) => {
 
   const [toDelete, setToDelete] = useState<PersonWithPointTotals | null>(null);
 
-  const { mutate: deleteUser } = api.person.delete.useMutation({
+  const { mutate: deletePerson } = api.person.delete.useMutation({
     onSuccess: () => router.refresh(),
   });
 
   const deletePersonHandler = (
     e: FormEvent<HTMLFormElement>,
-    user: PersonWithPointTotals | null,
+    person: PersonWithPointTotals | null,
   ) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (user) {
-      deleteUser(user.id);
+    if (person) {
+      deletePerson(person.id);
       setToDelete(null);
     }
   };
