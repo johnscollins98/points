@@ -1,10 +1,12 @@
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "@mantine/notifications/styles.css";
 import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
 
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import { getServerAuthSession } from "~/server/auth";
 import { TRPCReactProvider } from "~/trpc/react";
 import { Providers } from "./_components/Providers";
@@ -48,6 +50,7 @@ export default async function RootLayout({
       <body className={`${inter.variable} root`}>
         <Providers session={session}>
           <MantineProvider defaultColorScheme="auto">
+            <Notifications />
             <TRPCReactProvider>{children}</TRPCReactProvider>
           </MantineProvider>
         </Providers>
