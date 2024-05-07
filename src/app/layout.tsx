@@ -17,7 +17,20 @@ const inter = Inter({
 export const metadata = {
   title: "Points",
   description: "Tracking points.",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: {
+    icon: [
+      {
+        media: "(prefers-color-scheme: light)",
+        url: "/favicon.ico",
+        rel: "icon",
+      },
+      {
+        media: "(prefers-color-scheme: dark)",
+        url: "/favicon-dark.ico",
+        rel: "icon",
+      },
+    ],
+  },
 };
 
 export default async function RootLayout({
