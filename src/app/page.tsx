@@ -1,12 +1,12 @@
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
-import { AdminForm } from "./_components/AdminForm";
-import { CreatePoint } from "./_components/CreatePoint";
+import { AdminForm } from "./_components/Admin/AdminForm";
+import { SessionForm } from "./_components/Auth/SessionForm";
 import { DateFilerForm } from "./_components/DateFilterForm";
-import { PersonForm } from "./_components/PersonForm";
-import { PersonTable } from "./_components/PersonTable";
-import { PointTable } from "./_components/PointTable";
-import { SessionForm } from "./_components/SessionForm";
+import { PersonForm } from "./_components/Person/PersonForm";
+import { PersonTable } from "./_components/Person/PersonTable";
+import { CreatePoint } from "./_components/PointEntry/CreatePoint";
+import { PointTable } from "./_components/PointEntry/PointTable";
 import { getDateFilterObject } from "./_utils/getDateFilterObject";
 
 export default async function Home({

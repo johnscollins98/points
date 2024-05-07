@@ -46,7 +46,7 @@ export const PointTable = ({ pointEntries, people }: PointTableProps) => {
               <Table.Td>{pointEntry.Person.name}</Table.Td>
               <Table.Td>{pointEntry.points}</Table.Td>
               <Table.Td>{pointEntry.wasDouble ? <FaCheck /> : null}</Table.Td>
-              <Table.Td>{pointEntry.date.toLocaleDateString()}</Table.Td>
+              <Table.Td>{pointEntry.date.toLocaleDateString("en-GB")}</Table.Td>
               <Table.Td>
                 {session?.user.isAdmin && (
                   <div className="flex items-center gap-1">
