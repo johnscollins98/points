@@ -10,6 +10,7 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
+    "prestart": "prisma migrate deploy",
     "start": "next start"
   },
   "dependencies": {
