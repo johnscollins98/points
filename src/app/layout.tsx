@@ -5,7 +5,9 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
+import { getServerAuthSession } from "~/server/auth";
 import { TRPCReactProvider } from "~/trpc/react";
+import { Providers } from "./_components/Providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,20 +20,24 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerAuthSession();
+
   return (
     <html lang="en">
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body className={`${inter.variable} root`}>
-        <MantineProvider defaultColorScheme="auto">
-          <TRPCReactProvider>{children}</TRPCReactProvider>
-        </MantineProvider>
+        <Providers session={session}>
+          <MantineProvider defaultColorScheme="auto">
+            <TRPCReactProvider>{children}</TRPCReactProvider>
+          </MantineProvider>
+        </Providers>
       </body>
     </html>
   );

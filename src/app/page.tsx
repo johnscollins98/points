@@ -1,7 +1,9 @@
+import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
 import { CreatePoint } from "./_components/CreatePoint";
 import { DateFilerForm } from "./_components/DateFilterForm";
 import { PointTable } from "./_components/PointTable";
+import { SessionForm } from "./_components/SessionForm";
 import { UserForm } from "./_components/UserForm";
 import { UserTable } from "./_components/UserTable";
 import { getDateFilterObject } from "./_utils/getDateFilterObject";
@@ -11,6 +13,8 @@ export default async function Home({
 }: {
   searchParams: Record<string, string | string[] | undefined>;
 }) {
+  const session = await getServerAuthSession();
+
   const { startDate, endDate, name } = searchParams;
   const filterDates = getDateFilterObject(startDate, endDate);
 
@@ -26,11 +30,12 @@ export default async function Home({
         <PointTable pointEntries={points} people={people} />
       </div>
       <div className="flex flex-col gap-6 md:overflow-auto md:pr-2">
+        <SessionForm session={session} />
         <DateFilerForm />
         <div className="flex flex-col gap-4">
           <UserTable people={people} />
-          <UserForm />
-          <CreatePoint people={people} />
+          {session?.user.isAdmin && <UserForm />}
+          {session?.user.isAdmin && <CreatePoint people={people} />}
         </div>
       </div>
     </main>

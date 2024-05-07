@@ -2,6 +2,7 @@
 
 import { ActionIcon, CloseIcon, Table } from "@mantine/core";
 import { type Person } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { RxPencil1 } from "react-icons/rx";
@@ -15,6 +16,8 @@ export interface PointTableProps {
 }
 
 export const PointTable = ({ pointEntries, people }: PointTableProps) => {
+  const { data: session } = useSession();
+
   const [toDelete, setToDelete] = useState<PointEntryWithPerson | null>(null);
   const onDelete = (point: PointEntryWithPerson) => {
     setToDelete(point);
@@ -45,14 +48,16 @@ export const PointTable = ({ pointEntries, people }: PointTableProps) => {
               <Table.Td>{pointEntry.wasDouble ? <FaCheck /> : null}</Table.Td>
               <Table.Td>{pointEntry.date.toLocaleDateString()}</Table.Td>
               <Table.Td>
-                <div className="flex items-center gap-1">
-                  <ActionIcon onClick={() => onEdit(pointEntry)}>
-                    <RxPencil1 />
-                  </ActionIcon>
-                  <ActionIcon onClick={() => onDelete(pointEntry)}>
-                    <CloseIcon />
-                  </ActionIcon>
-                </div>
+                {session?.user.isAdmin && (
+                  <div className="flex items-center gap-1">
+                    <ActionIcon onClick={() => onEdit(pointEntry)}>
+                      <RxPencil1 />
+                    </ActionIcon>
+                    <ActionIcon onClick={() => onDelete(pointEntry)}>
+                      <CloseIcon />
+                    </ActionIcon>
+                  </div>
+                )}
               </Table.Td>
             </Table.Tr>
           ))}

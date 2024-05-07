@@ -1,7 +1,11 @@
 import { type Person, type PointEntry } from "@prisma/client";
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 
 export const pointRouter = createTRPCRouter({
   getAll: publicProcedure
@@ -30,7 +34,7 @@ export const pointRouter = createTRPCRouter({
       });
     }),
 
-  update: publicProcedure
+  update: protectedProcedure
     .input(
       z.object({
         id: z.number().int(),
@@ -56,7 +60,7 @@ export const pointRouter = createTRPCRouter({
       });
     }),
 
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         personId: z.number().int(),
@@ -80,7 +84,7 @@ export const pointRouter = createTRPCRouter({
       });
     }),
 
-  deleteById: publicProcedure
+  deleteById: protectedProcedure
     .input(z.number().int())
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.pointEntry.delete({ where: { id: input } });
