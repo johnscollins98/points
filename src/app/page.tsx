@@ -1,5 +1,6 @@
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
+import { AdminForm } from "./_components/AdminForm";
 import { CreatePoint } from "./_components/CreatePoint";
 import { DateFilerForm } from "./_components/DateFilterForm";
 import { PointTable } from "./_components/PointTable";
@@ -36,6 +37,7 @@ export default async function Home({
           <UserTable people={people} />
           {session?.user.isAdmin && <UserForm />}
           {session?.user.isAdmin && <CreatePoint people={people} />}
+          {session?.user.isSuperuser && <AdminForm />}
         </div>
       </div>
     </main>

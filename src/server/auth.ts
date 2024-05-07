@@ -23,15 +23,16 @@ declare module "next-auth" {
     user: {
       id: string;
       isAdmin: boolean;
+      isSuperuser: boolean;
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    // ...other properties
+    admin: boolean;
+  }
 }
 
 /**
@@ -46,7 +47,8 @@ export const authOptions: NextAuthOptions = {
       user: {
         ...session.user,
         id: user.id,
-        isAdmin: user.email === env.ADMIN_EMAIL,
+        isAdmin: user.email === env.ADMIN_EMAIL || user.admin,
+        isSuperuser: user.email === env.ADMIN_EMAIL,
       },
     }),
   },

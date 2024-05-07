@@ -11,14 +11,14 @@ datasource db {
 }
 
 model PointEntry {
-    id         Int      @id @default(autoincrement())
-    points     Int
-    wasDouble  Boolean
-    date       DateTime
-    createAt   DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-    Person     Person   @relation(fields: [personId], references: [id])
-    personId   Int
+    id        Int      @id @default(autoincrement())
+    points    Int
+    wasDouble Boolean
+    date      DateTime
+    createAt  DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    Person    Person   @relation(fields: [personId], references: [id])
+    personId  Int
 }
 
 model Person {
@@ -62,6 +62,7 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    admin         Boolean   @default(false)
     accounts      Account[]
     sessions      Session[]
 }

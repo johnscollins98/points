@@ -95,7 +95,7 @@ export const publicProcedure = t.procedure;
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
-  if (!ctx.session?.user || !ctx.session.user.email) {
+  if (!ctx.session?.user?.email) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
@@ -109,4 +109,12 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
       session: { ...ctx.session, user: ctx.session.user },
     },
   });
+});
+
+export const suProcedure = protectedProcedure.use(({ ctx, next }) => {
+  if (!ctx.session.user.isSuperuser) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return next({ ctx });
 });
