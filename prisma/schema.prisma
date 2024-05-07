@@ -17,7 +17,7 @@ model PointEntry {
     date      DateTime
     createAt  DateTime @default(now())
     updatedAt DateTime @updatedAt
-    Person    Person   @relation(fields: [personId], references: [id])
+    Person    Person   @relation(fields: [personId], references: [id], onDelete: Cascade)
     personId  Int
 }
 
@@ -26,7 +26,7 @@ model Person {
     name       String
     createdAt  DateTime     @default(now())
     updatedAt  DateTime     @updatedAt
-    PointEntry PointEntry[]
+    PointEntry PointEntry[] 
 }
 
 // Necessary for Next auth

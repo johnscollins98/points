@@ -51,6 +51,15 @@ export const personRouter = createTRPCRouter({
     .mutation(({ ctx, input }) => {
       return ctx.db.person.create({ data: { name: input } });
     }),
+
+  delete: protectedProcedure
+    .input(z.number().int())
+    .mutation(({ ctx, input }) => {
+      return ctx.db.person.delete({
+        where: { id: input },
+        include: { PointEntry: true },
+      });
+    }),
 });
 
 export type PersonWithPointTotals = Awaited<

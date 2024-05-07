@@ -1,10 +1,12 @@
 "use client";
 
-import { Table } from "@mantine/core";
+import { ActionIcon, Button, CloseIcon, Modal, Table } from "@mantine/core";
+import { useSession } from "next-auth/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { RxCaretDown, RxCaretUp } from "react-icons/rx";
 import { type PersonWithPointTotals } from "~/server/api/routers/person";
+import { api } from "~/trpc/react";
 
 export interface UserTableProps {
   people: PersonWithPointTotals[];
@@ -22,6 +24,8 @@ export const UserTable = ({ people }: UserTableProps) => {
   const params = useSearchParams();
   const pathname = usePathname();
   const filterByName = params.get("name");
+
+  const { data: session } = useSession();
 
   const [sortBy, setSortBy] =
     useState<keyof PersonWithPointTotals>("pointTotal");
@@ -70,47 +74,99 @@ export const UserTable = ({ people }: UserTableProps) => {
     router.push(`${pathname}?${query}`);
   };
 
+  const [toDelete, setToDelete] = useState<PersonWithPointTotals | null>(null);
+
+  const { mutate: deleteUser } = api.person.delete.useMutation({
+    onSuccess: () => router.refresh(),
+  });
+
+  const deletePersonHandler = (
+    e: FormEvent<HTMLFormElement>,
+    user: PersonWithPointTotals | null,
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (user) {
+      deleteUser(user.id);
+      setToDelete(null);
+    }
+  };
+
   return (
-    <Table>
-      <Table.Thead>
-        <Table.Tr>
-          {headers.map((header) => (
-            <Table.Th
-              key={header.id}
-              onClick={() => headerClickHandler(header.id)}
-            >
-              <div className="flex items-center gap-1">
-                {header.label}
-                {sortBy === header.id &&
-                  (sortDirection === "asc" ? (
-                    <RxCaretUp size={20} />
-                  ) : (
-                    <RxCaretDown size={20} />
-                  ))}
-              </div>
-            </Table.Th>
-          ))}
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>
-        {sortedPeople.map((person) => (
-          <Table.Tr key={person.id}>
-            <Table.Td
-              onClick={() => nameClickHandler(person.name)}
-              className={`cursor-pointer select-none ${filterByName === person.name ? "font-bold" : ""}`}
-            >
-              {person.name}
-            </Table.Td>
-            <Table.Td>{person.pointTotal}</Table.Td>
-            <Table.Td>{person.totalEntries}</Table.Td>
-            <Table.Td>
-              {person.pointAverage.toLocaleString(undefined, {
-                maximumSignificantDigits: 3,
-              })}
-            </Table.Td>
+    <>
+      <Table>
+        <Table.Thead>
+          <Table.Tr>
+            {headers.map((header) => (
+              <Table.Th
+                key={header.id}
+                onClick={() => headerClickHandler(header.id)}
+              >
+                <div className="flex items-center gap-1">
+                  {header.label}
+                  {sortBy === header.id &&
+                    (sortDirection === "asc" ? (
+                      <RxCaretUp size={20} />
+                    ) : (
+                      <RxCaretDown size={20} />
+                    ))}
+                </div>
+              </Table.Th>
+            ))}
+            {session?.user.isAdmin && <Table.Th></Table.Th>}
           </Table.Tr>
-        ))}
-      </Table.Tbody>
-    </Table>
+        </Table.Thead>
+        <Table.Tbody>
+          {sortedPeople.map((person) => (
+            <Table.Tr key={person.id}>
+              <Table.Td
+                onClick={() => nameClickHandler(person.name)}
+                className={`cursor-pointer select-none ${filterByName === person.name ? "font-bold" : ""}`}
+              >
+                {person.name}
+              </Table.Td>
+              <Table.Td>{person.pointTotal}</Table.Td>
+              <Table.Td>{person.totalEntries}</Table.Td>
+              <Table.Td>
+                {person.pointAverage.toLocaleString(undefined, {
+                  maximumSignificantDigits: 3,
+                })}
+              </Table.Td>
+              {session?.user.isAdmin && (
+                <Table.Td>
+                  <ActionIcon onClick={() => setToDelete(person)}>
+                    <CloseIcon></CloseIcon>
+                  </ActionIcon>
+                </Table.Td>
+              )}
+            </Table.Tr>
+          ))}
+        </Table.Tbody>
+      </Table>
+      <Modal
+        title={`Delete ${toDelete?.name}`}
+        opened={toDelete !== null}
+        onClose={() => setToDelete(null)}
+        centered
+      >
+        <form
+          onSubmit={(e) => deletePersonHandler(e, toDelete)}
+          onReset={() => setToDelete(null)}
+          className="flex flex-col gap-2"
+        >
+          Are you sure you want to delete {toDelete?.name}? It will also remove
+          all their points.
+          <div className="flex justify-end gap-1">
+            <Button variant="default" type="reset">
+              No
+            </Button>
+            <Button color="red" type="submit">
+              Yes
+            </Button>
+          </div>
+        </form>
+      </Modal>
+    </>
   );
 };
