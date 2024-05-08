@@ -7,6 +7,19 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
+const PointCreateEditSchema = z
+  .object({
+    personId: z.number().int(),
+    points: z.number().int(),
+    date: z.date().default(new Date()),
+    wasDouble: z.boolean(),
+    wasTriple: z.boolean(),
+  })
+  .refine((schema) => !(schema.wasDouble && schema.wasTriple), {
+    message: "Cannot be wasDouble and wasTriple",
+    path: ["wasDouble", "wasTriple"],
+  });
+
 export const pointRouter = createTRPCRouter({
   getAll: publicProcedure
     .input(
@@ -38,37 +51,28 @@ export const pointRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.number().int(),
-        personId: z.number().int(),
-        points: z.number().int(),
-        date: z.date().default(new Date()),
-        wasDouble: z.boolean(),
+        point: PointCreateEditSchema,
       }),
     )
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.pointEntry.update({
         data: {
-          date: input.date,
-          points: input.points,
+          date: input.point.date,
+          points: input.point.points,
           Person: {
             connect: {
-              id: input.personId,
+              id: input.point.personId,
             },
           },
-          wasDouble: input.wasDouble,
+          wasDouble: input.point.wasDouble,
+          wasTriple: input.point.wasTriple,
         },
         where: { id: input.id },
       });
     }),
 
   create: protectedProcedure
-    .input(
-      z.object({
-        personId: z.number().int(),
-        points: z.number().int(),
-        date: z.date().default(new Date()),
-        wasDouble: z.boolean(),
-      }),
-    )
+    .input(PointCreateEditSchema)
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.pointEntry.create({
         data: {
@@ -80,6 +84,7 @@ export const pointRouter = createTRPCRouter({
             },
           },
           wasDouble: input.wasDouble,
+          wasTriple: input.wasTriple,
         },
       });
     }),

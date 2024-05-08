@@ -10,6 +10,7 @@ export interface PointSubmit {
   points: number;
   date?: Date;
   wasDouble: boolean;
+  wasTriple: boolean;
 }
 
 export interface PointFormProps {
@@ -33,12 +34,19 @@ export const PointForm = ({
     defaultPoint?.date ?? new Date(),
   );
   const [wasDouble, setWasDouble] = useState(defaultPoint?.wasDouble ?? false);
+  const [wasTriple, setWasTriple] = useState(defaultPoint?.wasTriple ?? false);
 
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
-    onSubmit({ personId, points, date: date ?? undefined, wasDouble });
+    onSubmit({
+      personId,
+      points,
+      date: date ?? undefined,
+      wasDouble,
+      wasTriple,
+    });
   };
 
   return (
@@ -71,7 +79,14 @@ export const PointForm = ({
       <Checkbox
         label="Was Double Points?"
         checked={wasDouble}
+        disabled={wasTriple}
         onChange={(e) => setWasDouble(e.currentTarget.checked)}
+      />
+      <Checkbox
+        label="Was Triple Points?"
+        checked={wasTriple}
+        disabled={wasDouble}
+        onChange={(e) => setWasTriple(e.currentTarget.checked)}
       />
       <div className="flex justify-end gap-3">
         <Button type="reset" variant="default" disabled={isPending}>

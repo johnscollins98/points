@@ -29,7 +29,7 @@ export const EditPoint = ({
 
   const submitHandler = (v: PointSubmit) => {
     if (defaultPoint) {
-      updatePointEntry({ ...v, id: defaultPoint.id });
+      updatePointEntry({ point: v, id: defaultPoint.id });
       closeHandler();
     }
   };

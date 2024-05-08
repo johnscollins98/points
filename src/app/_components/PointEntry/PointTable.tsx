@@ -36,6 +36,7 @@ export const PointTable = ({ pointEntries, people }: PointTableProps) => {
             <Table.Th>Name</Table.Th>
             <Table.Th>Points</Table.Th>
             <Table.Th>Double?</Table.Th>
+            <Table.Th>Triple?</Table.Th>
             <Table.Th>Date</Table.Th>
             <Table.Th />
           </Table.Tr>
@@ -46,6 +47,7 @@ export const PointTable = ({ pointEntries, people }: PointTableProps) => {
               <Table.Td>{pointEntry.Person.name}</Table.Td>
               <Table.Td>{pointEntry.points}</Table.Td>
               <Table.Td>{pointEntry.wasDouble ? <FaCheck /> : null}</Table.Td>
+              <Table.Td>{pointEntry.wasTriple ? <FaCheck /> : null}</Table.Td>
               <Table.Td>{pointEntry.date.toLocaleDateString("en-GB")}</Table.Td>
               <Table.Td>
                 {session?.user.isAdmin && (
