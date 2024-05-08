@@ -4,7 +4,7 @@ import { ActionIcon, CloseIcon, Table } from "@mantine/core";
 import { type Person } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaTimes } from "react-icons/fa";
 import { RxPencil1 } from "react-icons/rx";
 import { type PointEntryWithPerson } from "~/server/api/routers/points";
 import { DeletePoint } from "./DeletePoint";
@@ -35,8 +35,16 @@ export const PointTable = ({ pointEntries, people }: PointTableProps) => {
           <Table.Tr>
             <Table.Th>Name</Table.Th>
             <Table.Th>Points</Table.Th>
-            <Table.Th>Double?</Table.Th>
-            <Table.Th>Triple?</Table.Th>
+            <Table.Th>
+              <div className="flex items-center">
+                <FaTimes /> 2
+              </div>
+            </Table.Th>
+            <Table.Th>
+              <div className="flex items-center">
+                <FaTimes /> 3
+              </div>
+            </Table.Th>
             <Table.Th>Date</Table.Th>
             <Table.Th />
           </Table.Tr>
