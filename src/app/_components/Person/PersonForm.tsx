@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, TextInput } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { api } from "~/trpc/react";
@@ -10,6 +11,12 @@ export const PersonForm = () => {
 
   const { mutate: createPerson, isPending } = api.person.create.useMutation({
     onSuccess: () => router.refresh(),
+    onError: () =>
+      notifications.show({
+        title: "Error",
+        message: "An error occurred adding the person, please try again",
+        color: "red",
+      }),
   });
 
   const [name, setName] = useState("");

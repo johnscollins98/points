@@ -1,6 +1,7 @@
 "use client";
 
 import { ActionIcon, Button, CloseIcon, Modal, Table } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
@@ -78,6 +79,12 @@ export const PersonTable = ({ people }: PersonTableProps) => {
 
   const { mutate: deletePerson } = api.person.delete.useMutation({
     onSuccess: () => router.refresh(),
+    onError: () =>
+      notifications.show({
+        title: "Error",
+        message: "An error occurred deleting the person, please try again",
+        color: "red",
+      }),
   });
 
   const deletePersonHandler = (

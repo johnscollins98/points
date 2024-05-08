@@ -8,6 +8,7 @@ import {
   Modal,
   Select,
 } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { type User } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -29,10 +30,22 @@ export const AdminFormClient = ({ users }: Props) => {
 
   const { mutate: addAdmin } = api.admin.addAdmin.useMutation({
     onSuccess: () => router.refresh(),
+    onError: () =>
+      notifications.show({
+        message: "An error occurred adding the admin, please try again",
+        title: "Error",
+        color: "red",
+      }),
   });
 
   const { mutate: removeAdmin } = api.admin.removeAdmin.useMutation({
     onSuccess: () => router.refresh(),
+    onError: () =>
+      notifications.show({
+        message: "An error occurred removing the admin, please try again",
+        title: "Error",
+        color: "red",
+      }),
   });
 
   const handleAddSubmit = (e: FormEvent<HTMLFormElement>) => {

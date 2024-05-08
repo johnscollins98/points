@@ -1,6 +1,7 @@
 "use client";
 
 import { Modal } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { type Person } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { type PointEntryWithPerson } from "~/server/api/routers/points";
@@ -21,6 +22,12 @@ export const EditPoint = ({
   const router = useRouter();
   const { mutate: updatePointEntry, isPending } = api.point.update.useMutation({
     onSuccess: () => router.refresh(),
+    onError: () =>
+      notifications.show({
+        title: "Error",
+        message: "An error occurred updating the point entry, please try again",
+        color: "red",
+      }),
   });
 
   const closeHandler = () => {
