@@ -10,7 +10,7 @@ import {
 const PointCreateEditSchema = z
   .object({
     personId: z.number().int(),
-    points: z.number().int(),
+    points: z.number().int().min(1),
     date: z.date().default(new Date()),
     wasDouble: z.boolean(),
     wasTriple: z.boolean(),
