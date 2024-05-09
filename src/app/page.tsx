@@ -28,12 +28,14 @@ export default async function Home({
   return (
     <main className="flex flex-col-reverse justify-between gap-4 overflow-auto p-4 lg:max-h-svh lg:flex-row lg:overflow-hidden">
       <div className="flex max-h-80 flex-grow flex-col gap-3 overflow-auto lg:max-h-[unset]">
+        <h2 className="my-1 text-lg font-semibold lg:hidden">Point Entries</h2>
         <PointTable pointEntries={points} people={people} />
       </div>
       <div className="flex flex-col gap-6 lg:overflow-auto lg:pr-2">
         <SessionForm session={session} />
         <DateFilerForm />
         <div className="flex flex-col gap-4">
+          <h2 className="my-1 text-lg font-semibold">Point Leaderboard</h2>
           <PersonTable people={people} />
           {session?.user.isAdmin && <PersonForm />}
           {session?.user.isAdmin && <CreatePoint people={people} />}

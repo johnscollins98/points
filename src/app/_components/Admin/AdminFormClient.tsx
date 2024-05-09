@@ -73,7 +73,7 @@ export const AdminFormClient = ({ users }: Props) => {
   return (
     <>
       <div className="flex flex-col gap-3">
-        <h2 className="text-lg font-bold">Admins</h2>
+        <h2 className="text-lg font-semibold">Admins</h2>
         <div className="flex flex-col gap-1">
           {admins.map((admin) => (
             <div key={admin.id} className="flex justify-between">
