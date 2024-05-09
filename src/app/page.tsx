@@ -27,7 +27,7 @@ export default async function Home({
 
   return (
     <main className="flex flex-col-reverse justify-between gap-4 overflow-auto p-4 lg:max-h-svh lg:flex-row lg:overflow-hidden">
-      <div className="flex max-h-80 flex-grow flex-col gap-3 overflow-auto lg:max-h-[unset]">
+      <div className="flex max-h-80 flex-grow flex-col gap-3 overflow-y-auto overflow-x-hidden lg:max-h-[unset]">
         <h2 className="my-1 text-lg font-semibold lg:hidden">Point Entries</h2>
         <PointTable pointEntries={points} people={people} />
       </div>
