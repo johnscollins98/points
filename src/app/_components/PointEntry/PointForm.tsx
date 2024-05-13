@@ -19,12 +19,14 @@ export interface PointFormProps {
   isPending: boolean;
   people: Person[];
   defaultPoint?: PointSubmit;
+  autoFocus?: boolean;
 }
 
 export const PointForm = ({
   people,
   onSubmit,
   onReset,
+  autoFocus = false,
   isPending,
   defaultPoint,
 }: PointFormProps) => {
@@ -65,7 +67,7 @@ export const PointForm = ({
         label="Person"
         placeholder="Select a person..."
         searchable
-        autoFocus
+        autoFocus={autoFocus}
         required
       />
       <NumberInput
