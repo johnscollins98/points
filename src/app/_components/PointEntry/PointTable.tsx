@@ -35,6 +35,7 @@ export const PointTable = ({ pointEntries, people }: PointTableProps) => {
           <Table.Tr>
             <Table.Th>Name</Table.Th>
             <Table.Th>Points</Table.Th>
+            <Table.Th>Votes</Table.Th>
             <Table.Th>
               <div className="flex items-center">
                 <FaTimes /> 2
@@ -54,6 +55,7 @@ export const PointTable = ({ pointEntries, people }: PointTableProps) => {
             <Table.Tr key={pointEntry.id}>
               <Table.Td>{pointEntry.Person.name}</Table.Td>
               <Table.Td>{pointEntry.points}</Table.Td>
+              <Table.Td>{pointEntry.numVoters}</Table.Td>
               <Table.Td>{pointEntry.wasDouble ? <FaCheck /> : null}</Table.Td>
               <Table.Td>{pointEntry.wasTriple ? <FaCheck /> : null}</Table.Td>
               <Table.Td>{pointEntry.date.toLocaleDateString("en-GB")}</Table.Td>

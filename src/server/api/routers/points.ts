@@ -11,6 +11,7 @@ const PointCreateEditSchema = z
   .object({
     personId: z.number().int(),
     points: z.number().int().min(1),
+    numVoters: z.number().int().min(1),
     date: z.date().default(new Date()),
     wasDouble: z.boolean(),
     wasTriple: z.boolean(),
@@ -18,7 +19,18 @@ const PointCreateEditSchema = z
   .refine((schema) => !(schema.wasDouble && schema.wasTriple), {
     message: "Cannot be wasDouble and wasTriple",
     path: ["wasDouble", "wasTriple"],
-  });
+  })
+  .refine(
+    ({ wasDouble, wasTriple, points, numVoters }) => {
+      if (wasDouble) return points === numVoters * 2;
+      if (wasTriple) return points === numVoters * 3;
+      return points < numVoters;
+    },
+    ({ points, numVoters, wasDouble, wasTriple }) => ({
+      message: `Invalid points total '${points}' for number of voters '${numVoters}'`,
+      params: { points, numVoters, wasDouble, wasTriple },
+    }),
+  );
 
 export const pointRouter = createTRPCRouter({
   getAll: publicProcedure
@@ -56,17 +68,7 @@ export const pointRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.pointEntry.update({
-        data: {
-          date: input.point.date,
-          points: input.point.points,
-          Person: {
-            connect: {
-              id: input.point.personId,
-            },
-          },
-          wasDouble: input.point.wasDouble,
-          wasTriple: input.point.wasTriple,
-        },
+        data: input.point,
         where: { id: input.id },
       });
     }),
@@ -75,17 +77,7 @@ export const pointRouter = createTRPCRouter({
     .input(PointCreateEditSchema)
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.pointEntry.create({
-        data: {
-          date: input.date,
-          points: input.points,
-          Person: {
-            connect: {
-              id: input.personId,
-            },
-          },
-          wasDouble: input.wasDouble,
-          wasTriple: input.wasTriple,
-        },
+        data: input,
       });
     }),
 

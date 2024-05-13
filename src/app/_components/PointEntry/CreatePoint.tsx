@@ -1,12 +1,12 @@
 "use client";
 
 import { Button, Modal } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
 import { type Person } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { errorToast } from "~/app/_utils/errorToast";
 import { api } from "~/trpc/react";
-import { PointForm, type PointSubmit } from "./PointForm";
+import { PointForm } from "./PointForm";
 
 export interface CreatePointProps {
   people: Person[];
@@ -17,22 +17,17 @@ export const CreatePoint = ({ people }: CreatePointProps) => {
 
   const router = useRouter();
   const { mutate: createPointEntry, isPending } = api.point.create.useMutation({
-    onSuccess: () => router.refresh(),
-    onError: () =>
-      notifications.show({
-        title: "Error",
-        message: "An error occurred adding the point entry, please try again",
-        color: "red",
-      }),
+    onSuccess: () => {
+      router.refresh();
+      closeHandler();
+    },
+    onError: (e) => {
+      errorToast(e, "An error occurred creating the point entry");
+    },
   });
 
   const closeHandler = () => {
     setOpen(false);
-  };
-
-  const submitHandler = (v: PointSubmit) => {
-    createPointEntry(v);
-    closeHandler();
   };
 
   return (
@@ -46,7 +41,7 @@ export const CreatePoint = ({ people }: CreatePointProps) => {
         title="Create Point Entry"
       >
         <PointForm
-          onSubmit={submitHandler}
+          onSubmit={createPointEntry}
           onReset={closeHandler}
           isPending={isPending}
           people={people}

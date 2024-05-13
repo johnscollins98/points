@@ -13,6 +13,7 @@ datasource db {
 model PointEntry {
     id        Int      @id @default(autoincrement())
     points    Int
+    numVoters Int?
     wasDouble Boolean  @default(false)
     wasTriple Boolean  @default(false)
     date      DateTime
@@ -27,7 +28,7 @@ model Person {
     name       String
     createdAt  DateTime     @default(now())
     updatedAt  DateTime     @updatedAt
-    PointEntry PointEntry[] 
+    PointEntry PointEntry[]
 }
 
 // Necessary for Next auth

@@ -2,12 +2,13 @@
 
 import { Button, Checkbox, NumberInput, Select } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
-import { type Person } from "@prisma/client";
+import { type Person, type PointEntry } from "@prisma/client";
 import { useState, type FormEvent } from "react";
 
 export interface PointSubmit {
   personId: number;
   points: number;
+  numVoters: number;
   date?: Date;
   wasDouble: boolean;
   wasTriple: boolean;
@@ -18,7 +19,7 @@ export interface PointFormProps {
   onReset: () => void;
   isPending: boolean;
   people: Person[];
-  defaultPoint?: PointSubmit;
+  defaultPoint?: PointEntry;
   autoFocus?: boolean;
 }
 
@@ -37,6 +38,7 @@ export const PointForm = ({
   );
   const [wasDouble, setWasDouble] = useState(defaultPoint?.wasDouble ?? false);
   const [wasTriple, setWasTriple] = useState(defaultPoint?.wasTriple ?? false);
+  const [numVoters, setNumVoters] = useState(defaultPoint?.numVoters ?? NaN);
 
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,6 +50,7 @@ export const PointForm = ({
       date: date ?? undefined,
       wasDouble,
       wasTriple,
+      numVoters,
     });
   };
 
@@ -76,6 +79,13 @@ export const PointForm = ({
         required
         placeholder="Total number of points..."
         onChange={(value) => setPoints(parseInt(value.toString()))}
+      />
+      <NumberInput
+        label="Number of Voters"
+        value={numVoters}
+        required
+        placeholder="Number of people voting..."
+        onChange={(value) => setNumVoters(parseInt(value.toString()))}
       />
       <DateInput value={date} onChange={setDate} label="Date" />
       <Checkbox
