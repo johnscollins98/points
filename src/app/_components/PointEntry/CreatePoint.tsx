@@ -1,12 +1,13 @@
 "use client";
 
 import { Button, Modal } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import { type Person } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { errorToast } from "~/app/_utils/errorToast";
 import { api } from "~/trpc/react";
-import { PointForm } from "./PointForm";
+import { PointForm, type PointSubmit } from "./PointForm";
 
 export interface CreatePointProps {
   people: Person[];
@@ -30,6 +31,23 @@ export const CreatePoint = ({ people }: CreatePointProps) => {
     setOpen(false);
   };
 
+  const submitHandler = (v: PointSubmit) => {
+    const numVoters = v.numVoters;
+    if (numVoters === undefined) {
+      // this shouldn't really happen, but just incase
+      notifications.show({
+        title: "Error",
+        message: "Number of voters must be provided.",
+        color: "red",
+      });
+      return;
+    }
+
+    if (v.numVoters) {
+      createPointEntry({ ...v, numVoters });
+    }
+  };
+
   return (
     <div className="flex justify-start">
       <Button onClick={() => setOpen(true)}>Add New Point Entry</Button>
@@ -41,11 +59,12 @@ export const CreatePoint = ({ people }: CreatePointProps) => {
         title="Create Point Entry"
       >
         <PointForm
-          onSubmit={createPointEntry}
+          onSubmit={submitHandler}
           onReset={closeHandler}
           isPending={isPending}
           people={people}
           autoFocus
+          requireNumVoters
         />
       </Modal>
     </div>

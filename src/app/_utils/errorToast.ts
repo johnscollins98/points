@@ -7,7 +7,10 @@ export const errorToast = (
   fallbackMessage: string,
 ) => {
   if (e.data?.zodError) {
-    Object.values(e.data.zodError.fieldErrors).map((err) =>
+    [
+      ...Object.values(e.data.zodError.fieldErrors),
+      ...e.data.zodError.formErrors,
+    ].forEach((err) =>
       notifications.show({
         title: "Error",
         message: err,

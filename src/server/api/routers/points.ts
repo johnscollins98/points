@@ -7,11 +7,11 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
-const PointCreateEditSchema = z
+const PointEditSchema = z
   .object({
     personId: z.number().int(),
     points: z.number().int().min(1),
-    numVoters: z.number().int().min(1),
+    numVoters: z.number().int().min(1).optional(),
     date: z.date().default(new Date()),
     wasDouble: z.boolean(),
     wasTriple: z.boolean(),
@@ -22,6 +22,7 @@ const PointCreateEditSchema = z
   })
   .refine(
     ({ wasDouble, wasTriple, points, numVoters }) => {
+      if (!numVoters) return true;
       if (wasDouble) return points === numVoters * 2;
       if (wasTriple) return points === numVoters * 3;
       return points < numVoters;
@@ -31,6 +32,13 @@ const PointCreateEditSchema = z
       params: { points, numVoters, wasDouble, wasTriple },
     }),
   );
+
+const PointCreateSchema = z.intersection(
+  PointEditSchema,
+  z.object({
+    numVoters: z.number().int().min(1),
+  }),
+);
 
 export const pointRouter = createTRPCRouter({
   getAll: publicProcedure
@@ -63,7 +71,7 @@ export const pointRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.number().int(),
-        point: PointCreateEditSchema,
+        point: PointEditSchema,
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -74,7 +82,7 @@ export const pointRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(PointCreateEditSchema)
+    .input(PointCreateSchema)
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.pointEntry.create({
         data: input,

@@ -8,7 +8,7 @@ import { useState, type FormEvent } from "react";
 export interface PointSubmit {
   personId: number;
   points: number;
-  numVoters: number;
+  numVoters?: number;
   date?: Date;
   wasDouble: boolean;
   wasTriple: boolean;
@@ -21,6 +21,7 @@ export interface PointFormProps {
   people: Person[];
   defaultPoint?: PointEntry;
   autoFocus?: boolean;
+  requireNumVoters?: boolean;
 }
 
 export const PointForm = ({
@@ -28,6 +29,7 @@ export const PointForm = ({
   onSubmit,
   onReset,
   autoFocus = false,
+  requireNumVoters = false,
   isPending,
   defaultPoint,
 }: PointFormProps) => {
@@ -50,7 +52,7 @@ export const PointForm = ({
       date: date ?? undefined,
       wasDouble,
       wasTriple,
-      numVoters,
+      numVoters: isNaN(numVoters) ? undefined : numVoters,
     });
   };
 
@@ -83,7 +85,7 @@ export const PointForm = ({
       <NumberInput
         label="Number of Voters"
         value={numVoters}
-        required
+        required={requireNumVoters}
         placeholder="Number of people voting..."
         onChange={(value) => setNumVoters(parseInt(value.toString()))}
       />
