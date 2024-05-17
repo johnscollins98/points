@@ -34,7 +34,7 @@ export const EditPoint = ({
     clearDefaultPoint();
   };
 
-  const submitHandler = (v: PointSubmit) => {
+  const submitHandler = (v: PointSubmit<number | null>) => {
     if (defaultPoint) {
       updatePointEntry({ point: v, id: defaultPoint.id });
     }

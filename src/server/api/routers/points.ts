@@ -11,7 +11,7 @@ const PointEditSchema = z
   .object({
     personId: z.number().int(),
     points: z.number().int().min(1),
-    numVoters: z.number().int().min(1).optional(),
+    numVoters: z.number().int().min(1).nullable(),
     date: z.date().default(new Date()),
     wasDouble: z.boolean(),
     wasTriple: z.boolean(),

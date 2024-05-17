@@ -2,36 +2,43 @@
 
 import { Button, Checkbox, NumberInput, Select } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
+import { notifications } from "@mantine/notifications";
 import { type Person, type PointEntry } from "@prisma/client";
 import { useState, type FormEvent } from "react";
 
-export interface PointSubmit {
+export interface PointSubmit<TRequireNumVoters extends number | null> {
   personId: number;
   points: number;
-  numVoters?: number;
+  numVoters: TRequireNumVoters;
   date?: Date;
   wasDouble: boolean;
   wasTriple: boolean;
 }
 
-export interface PointFormProps {
-  onSubmit: (v: PointSubmit) => void;
+export type PointFormProps = {
   onReset: () => void;
   isPending: boolean;
   people: Person[];
   defaultPoint?: PointEntry;
   autoFocus?: boolean;
-  requireNumVoters?: boolean;
-}
+} & (
+  | {
+      requireNumVoters: true;
+      onSubmit: (v: PointSubmit<number>) => void;
+    }
+  | {
+      requireNumVoters?: false;
+      onSubmit: (v: PointSubmit<number | null>) => void;
+    }
+);
 
 export const PointForm = ({
   people,
-  onSubmit,
   onReset,
   autoFocus = false,
-  requireNumVoters = false,
   isPending,
   defaultPoint,
+  ...props
 }: PointFormProps) => {
   const [personId, setPersonId] = useState(defaultPoint?.personId ?? NaN);
   const [points, setPoints] = useState(defaultPoint?.points ?? NaN);
@@ -46,14 +53,34 @@ export const PointForm = ({
     e.preventDefault();
     e.stopPropagation();
 
-    onSubmit({
+    const toSubmit = {
       personId,
       points,
       date: date ?? undefined,
       wasDouble,
       wasTriple,
-      numVoters: isNaN(numVoters) ? undefined : numVoters,
-    });
+    };
+
+    if (props.requireNumVoters) {
+      if (isNaN(numVoters)) {
+        notifications.show({
+          title: "Error",
+          message: "Number of voters must be provided.",
+          color: "red",
+        });
+        return;
+      }
+
+      props.onSubmit({
+        ...toSubmit,
+        numVoters,
+      });
+    } else {
+      props.onSubmit({
+        ...toSubmit,
+        numVoters: isNaN(numVoters) ? null : numVoters,
+      });
+    }
   };
 
   return (
@@ -85,7 +112,7 @@ export const PointForm = ({
       <NumberInput
         label="Number of Voters"
         value={numVoters}
-        required={requireNumVoters}
+        required={props.requireNumVoters}
         placeholder="Number of people voting..."
         onChange={(value) => setNumVoters(parseInt(value.toString()))}
       />
