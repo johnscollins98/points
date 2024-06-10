@@ -36,12 +36,12 @@ export const PointTable = ({ pointEntries, people }: PointTableProps) => {
             <Table.Th>Name</Table.Th>
             <Table.Th>Points</Table.Th>
             <Table.Th>Votes</Table.Th>
-            <Table.Th>
+            <Table.Th className="hidden sm:table-cell">
               <div className="flex items-center">
                 <FaTimes /> 2
               </div>
             </Table.Th>
-            <Table.Th>
+            <Table.Th className="hidden sm:table-cell">
               <div className="flex items-center">
                 <FaTimes /> 3
               </div>
@@ -56,8 +56,12 @@ export const PointTable = ({ pointEntries, people }: PointTableProps) => {
               <Table.Td>{pointEntry.Person.name}</Table.Td>
               <Table.Td>{pointEntry.points}</Table.Td>
               <Table.Td>{pointEntry.numVoters}</Table.Td>
-              <Table.Td>{pointEntry.wasDouble ? <FaCheck /> : null}</Table.Td>
-              <Table.Td>{pointEntry.wasTriple ? <FaCheck /> : null}</Table.Td>
+              <Table.Td className="hidden sm:table-cell">
+                {pointEntry.wasDouble ? <FaCheck /> : null}
+              </Table.Td>
+              <Table.Td className="hidden sm:table-cell">
+                {pointEntry.wasTriple ? <FaCheck /> : null}
+              </Table.Td>
               <Table.Td>{pointEntry.date.toLocaleDateString("en-GB")}</Table.Td>
               <Table.Td>
                 {session?.user.isAdmin && (
