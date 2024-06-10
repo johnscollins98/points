@@ -101,7 +101,7 @@ export const PersonTable = ({ people }: PersonTableProps) => {
   };
 
   return (
-    <div className="max-h-80 overflow-y-auto overflow-x-hidden">
+    <div className="max-h-80">
       <Table>
         <Table.Thead>
           <Table.Tr>
