@@ -72,11 +72,11 @@ export const AdminFormClient = ({ users }: Props) => {
 
   return (
     <>
-      <div className="flex flex-col gap-3">
+      <div className="flex w-fit flex-col gap-3">
         <h2 className="text-lg font-semibold">Admins</h2>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 self-stretch">
           {admins.map((admin) => (
-            <div key={admin.id} className="flex justify-between">
+            <div key={admin.id} className="flex flex-1 justify-between">
               <div className="flex items-center gap-1">
                 <Avatar src={admin.image} size="sm" />
                 {admin.name}

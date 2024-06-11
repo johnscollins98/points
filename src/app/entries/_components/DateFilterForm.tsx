@@ -59,21 +59,23 @@ export const DateFilerForm = () => {
       onSubmit={submitHandler}
       onReset={resetHandler}
     >
-      <DateInput
-        value={startDate}
-        onChange={setStartDate}
-        maxDate={endDate ?? undefined}
-        clearable
-        label="Start Date"
-      />
-      <DateInput
-        value={endDate}
-        onChange={setEndDate}
-        minDate={startDate ?? undefined}
-        clearable
-        label="End Date"
-      />
-      <div className="flex justify-end gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <DateInput
+          value={startDate}
+          onChange={setStartDate}
+          maxDate={endDate ?? undefined}
+          clearable
+          label="Start Date"
+        />
+        <DateInput
+          value={endDate}
+          onChange={setEndDate}
+          minDate={startDate ?? undefined}
+          clearable
+          label="End Date"
+        />
+      </div>
+      <div className="flex gap-2">
         <Button variant="default" type="reset">
           Reset
         </Button>

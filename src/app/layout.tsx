@@ -9,6 +9,7 @@ import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { getServerAuthSession } from "~/server/auth";
 import { TRPCReactProvider } from "~/trpc/react";
+import { AppContainer } from "./_components/AppContainer";
 import { Providers } from "./_components/Providers";
 
 const inter = Inter({
@@ -51,7 +52,9 @@ export default async function RootLayout({
         <Providers session={session}>
           <MantineProvider defaultColorScheme="auto">
             <Notifications />
-            <TRPCReactProvider>{children}</TRPCReactProvider>
+            <TRPCReactProvider>
+              <AppContainer>{children}</AppContainer>
+            </TRPCReactProvider>
           </MantineProvider>
         </Providers>
       </body>

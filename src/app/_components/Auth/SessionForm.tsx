@@ -1,12 +1,12 @@
-import { type Session } from "next-auth";
+"use client";
+
+import { useSession } from "next-auth/react";
 import { LoggedInView } from "./LoggedInView";
 import { LoggedOutView } from "./LoggedOutView";
 
-export interface SessionFormProps {
-  session: Session | null;
-}
+export const SessionForm = () => {
+  const { data: session } = useSession();
 
-export const SessionForm = async ({ session }: SessionFormProps) => {
   if (session) return <LoggedInView session={session} />;
 
   if (!session) {
