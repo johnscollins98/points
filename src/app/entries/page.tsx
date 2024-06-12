@@ -24,12 +24,12 @@ export default async function Entries({
   return (
     <div className="flex flex-col gap-4">
       <div>
-        <h2 className="text-lg font-medium">Filter</h2>
+        <h2 className="text-lg font-semibold">Filter</h2>
         <DateFilerForm />
       </div>
 
       <div className="flex flex-col gap-2">
-        <h2 className="text-lg font-medium">Point Entries</h2>
+        <h2 className="text-lg font-semibold">Point Entries</h2>
         <div>{session?.user.isAdmin && <CreatePoint people={people} />}</div>
         <PointTable pointEntries={points} people={people} />
       </div>
