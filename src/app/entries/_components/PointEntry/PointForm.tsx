@@ -20,7 +20,6 @@ export type PointFormProps = {
   isPending: boolean;
   people: Person[];
   defaultPoint?: PointEntry;
-  autoFocus?: boolean;
 } & (
   | {
       requireNumVoters: true;
@@ -35,7 +34,6 @@ export type PointFormProps = {
 export const PointForm = ({
   people,
   onReset,
-  autoFocus = false,
   isPending,
   defaultPoint,
   ...props
@@ -99,7 +97,6 @@ export const PointForm = ({
         label="Person"
         placeholder="Select a person..."
         searchable
-        autoFocus={autoFocus}
         required
       />
       <NumberInput

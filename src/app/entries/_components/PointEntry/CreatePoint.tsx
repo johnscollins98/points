@@ -45,7 +45,6 @@ export const CreatePoint = ({ people }: CreatePointProps) => {
           onReset={closeHandler}
           isPending={isPending}
           people={people}
-          autoFocus
           requireNumVoters
         />
       </Modal>
